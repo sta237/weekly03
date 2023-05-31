@@ -1,0 +1,102 @@
+---
+title: "Weekly exercise 3"
+output: 
+  learnr::tutorial:
+    theme: "sandstone"
+    css: css/styles.css
+runtime: shiny_prerendered
+---
+
+
+```{r setup, include=FALSE}
+library("learnr")
+library(ggplot2)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Question 7 a)
+
+Suppose $G\sim\text{Geom}(1/4)$. The following code generates $101$ simulated values of $G$ and stores them in the ascending order in vector `sims`. `base_plot` is a `ggplot` object plotting `sims_plot` along the x-axis as black points and segments in dark grey representing the distance from each value to the expectation. In the provided code space below, the variables `N`, `theta`, `sims`, and `sims_plot` are readily available.
+
+```{r q7a-setup, echo=TRUE}
+library(ggplot2)
+set.seed(123)
+N <- 101
+theta <- 1/4
+sims <- sort(rgeom(N, theta) + 1)
+sims_plot <- ggplot(mapping = aes(x = seq_len(N), y = sims)) +
+  theme_classic() +
+  geom_segment(aes(xend = seq_len(N), yend = 1 / theta), 
+               color = "darkgrey", linewidth = 1) +
+  geom_point(size = 2)  +
+  labs(x = "Cumulative count", y = "Simulated value") +
+  scale_x_continuous(breaks = c(1, 26, 51, 76, 101)) +
+  scale_y_continuous(
+    breaks = c(range(sims), median(sims), 1 / theta)
+  ) 
+```
+
+```{r q7a, exercise=TRUE, exercise.lines=30}
+# i. Compute median of G.
+# ii. Add annotation layers
+sims_plot
+# iii. Count simulated points strictly above and strictly below the horizontal red dotted line.
+# iv. Sum the lengths of grey bars above and below the orange dashed line.
+```
+
+iii. Are the counts the same? Explain why they are or they are not the same.
+
+```{r}
+shiny::textAreaInput(
+  "q7a-iii", "You can type your answer here", width = "100%",height = "120px")
+```
+
+
+iv. Based on the two values, what is the estimated mean of $G - E[G]$?
+
+```{r echo=FALSE}
+shiny::textAreaInput(
+  "q7a-iv", "You can type your answer here", width = "100%",height = "120px")
+```
+
+## Question 7 b)
+
+Recall Michael's bike travel plan from Question 1. Let $B$ be the distance in kilometers until he experiences a mechanical failure with his bike when he chooses between the "normal" and the "hard" terrains with a coin flip. Use $100,000$ simulations to estimate $E[B]$ and $\text{Var}(B)$^[If you were not able to compute $\lambda_H$, you may use $\lambda_H = 1/60$].
+
+
+```{r q7b, exercise=TRUE, exercise.lines=30}
+N <- 10^5
+```
+
+
+## Question 7 c)
+
+Consider the unit circle, or a circle with radius of 1. Let $X\sim\text{U}(-1,1)$. Suppose an arc is drawn by connecting the top and bottom intersections of the vertical line at $X$ and the unit circle. Let $L$ be the length of the arc connecting the intersections from the right. 
+
+Simulate 100,000 samples of $L$, create a density histogram of the simulated values, and compute $P(L < 4)$.
+
+```{r q7c, exercise=TRUE, exercise.lines=30}
+N <- 10^5
+L # simulate L
+# estimate the probability
+# create the density histogram
+ggplot(mapping = aes(x = L)) +
+  theme_minimal() 
+```
+
+```{r q7c-hint-1}
+# check
+?sin
+
+```
+
+```{r q7c-hint-2}
+# (Optional) if you want to color bars that represent regions where L < 4.
+# You can color bars based on a condition mapped inside aes().
+x <- rpois(100, 3)
+y <- rgeom(100, .3)
+ggplot() +
+  theme_void() +
+  geom_bar(aes(x = x, y = y, fill = x >3), stat = "identity")
+```
+
